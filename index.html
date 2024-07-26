@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Teste de Geolocalização</title>
+    </head>
+    <body>
+        <h1>Teste de Geolocalização</h1>
+        <script>
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Enviar para o backend
+                    fetch('http://127.0.0.1:5000/collect_location', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            latitude: latitude,
+                            longitude: longitude
+                        }),
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }, function(error) {
+                    console.log(error);
+                });
+            } else {
+                alert('Geolocalização não é suportada neste navegador.');
+            }
+        </script>
+    </body>
+</html>
